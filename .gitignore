@@ -1,0 +1,9 @@
+*.msi
+.vscode/
+obj/
+bin/
+.vs/
+TestResults/
+*.DotSettings.user
+*.jpg
+*.png
