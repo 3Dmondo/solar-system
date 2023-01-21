@@ -1,7 +1,7 @@
 #version 330
 #define PI 3.1415926538
 
-uniform sampler2D texture0;
+uniform sampler2D SurfaceTexture;
 
 uniform vec3 rotation;
 
@@ -41,7 +41,7 @@ void main()
     float lat = acos(N.y) / PI ;
     float lon = rotation.x + 0.5 * sign(N.z) * acos(-N.x/length(N.xz)) / PI;
     float diffuse = max(0.0, dot(lightDir, N));
-    outputColor = texture(texture0, vec2(lon,lat)) * diffuse;
+    outputColor = texture(SurfaceTexture, vec2(lon,lat)) * diffuse;
 
 }
 

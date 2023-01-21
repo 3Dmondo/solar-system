@@ -14,25 +14,25 @@ namespace PlanetRenderer
 
     public EarthRenderer() : base()
     {
-      EarthNight = Texture.LoadFromResource("PlanetRenderer.Textures.EarthNight.jpg");
-      EarthNight.Use(TextureUnit.Texture1);
       EarthNormal = Texture.LoadFromResource("PlanetRenderer.Textures.EarthNormal.png");
-      EarthNormal.Use(TextureUnit.Texture2);
+      EarthNormal.Use(TextureUnit.Texture1);
+      PlanetShader.SetInt("NormalTexture", 1);
+      EarthNight = Texture.LoadFromResource("PlanetRenderer.Textures.EarthNight.jpg");
+      EarthNight.Use(TextureUnit.Texture2);
+      PlanetShader.SetInt("NightTexture", 2);
       EarthSpec = Texture.LoadFromResource("PlanetRenderer.Textures.EarthSpec.png");
       EarthSpec.Use(TextureUnit.Texture3);
+      PlanetShader.SetInt("SpecularTexture", 3);
       EarthCloud = Texture.LoadFromResource("PlanetRenderer.Textures.EarthClouds.jpg");
       EarthCloud.Use(TextureUnit.Texture4);
-      PlanetShader.SetInt("texture1", 1);
-      PlanetShader.SetInt("texture2", 2);
-      PlanetShader.SetInt("texture3", 3);
-      PlanetShader.SetInt("texture4", 4);
+      PlanetShader.SetInt("CloudsTexture", 4);
     }
 
     protected override void UseTextures()
     {
       base.UseTextures();
-      EarthNight.Use(TextureUnit.Texture1);
-      EarthNormal.Use(TextureUnit.Texture2);
+      EarthNight.Use(TextureUnit.Texture2);
+      EarthNormal.Use(TextureUnit.Texture1);
       EarthSpec.Use(TextureUnit.Texture3);
       EarthCloud.Use(TextureUnit.Texture4);
     }

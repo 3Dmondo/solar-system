@@ -41,7 +41,7 @@ namespace PlanetRenderer
       GL.EnableVertexAttribArray(0);
       Surface = Texture.LoadFromResource(SurfaceTextureName);
       Surface.Use(TextureUnit.Texture0);
-      PlanetShader.SetInt("texture0", 0);
+      PlanetShader.SetInt("SurfaceTexture", 0);
     }
 
     public virtual void UpdateFrame(bool pause)

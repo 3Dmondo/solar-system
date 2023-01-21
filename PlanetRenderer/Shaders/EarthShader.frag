@@ -4,11 +4,11 @@
 #define Sigma 0.005
 #define CloudFactor (1.0 + Sigma)
 
-uniform sampler2D texture0;
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-uniform sampler2D texture3;
-uniform sampler2D texture4;
+uniform sampler2D SurfaceTexture;
+uniform sampler2D NormalTexture;
+uniform sampler2D NightTexture;
+uniform sampler2D SpecularTexture;
+uniform sampler2D CloudsTexture;
 
 uniform vec3 rotation;
 
@@ -65,7 +65,7 @@ vec4 renderBase(vec2 C)
     float lat = acos(N.y/length(N)) / PI ;
     float lon = rotation.x + 0.5 * sign(N.z) * acos(-N.x/length(N.xz)) / PI;
 
-    vec3 normal = texture(texture2, vec2(lon,lat)).xyz;
+    vec3 normal = texture(NormalTexture, vec2(lon,lat)).xyz;
 
     normal = vec3(normal.x,1-normal.y,normal.z);
     normal = normal * 2.0 - 1.0;   
@@ -74,9 +74,9 @@ vec4 renderBase(vec2 C)
     float diffuse = max(0.0, dot(lightDir, normal));
 
       return 
-        (texture(texture0, vec2(lon,lat)) * diffuse + 
-        texture(texture1, vec2(lon,lat)) * (1.0 - pow(diffuse, 0.5)) + 
-        texture(texture3, vec2(lon,lat)) * pow(diffuse,15));
+        (texture(SurfaceTexture, vec2(lon,lat)) * diffuse + 
+        texture(NightTexture, vec2(lon,lat)) * (1.0 - pow(diffuse, 0.5)) + 
+        texture(SpecularTexture, vec2(lon,lat)) * pow(diffuse,15));
 }
 
 void main()
@@ -95,18 +95,16 @@ void main()
 
     float diffuse = max(0.0, dot(lightDir, N));
 
-    vec4 cloud = texture(texture4, vec2(lon - rotation.x * 0.1,lat));
+    vec4 cloud = texture(CloudsTexture, vec2(lon - rotation.x * 0.1,lat));
 
     float borderSmoth = 0;
     if (base.w == 0) 
-    //if (sqrt(mag) > 1 - Sigma * 1.1)
     {
       borderSmoth = (1 + cos((sqrt(mag)-1/CloudFactor) * PI / Sigma));
       outputColor = (cloud + (1-cloud) * vec4(0.6,0.7,1,1) ) * borderSmoth * diffuse ;
     }
-    //else
       
-    outputColor += (base * (1-cloud.x) + cloud * diffuse);// * (1-borderSmoth);
+    outputColor += (base * (1-cloud.x) + cloud * diffuse);
 
 }
 
