@@ -1,24 +1,18 @@
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 namespace PlanetRenderer
 {
-  internal class EarthRenderer : PlanetRenderer
+  internal class EarthRenderer : RockPlanetRenderer
   {
     private Texture EarthNight;
-    private Texture EarthNormal;
     private Texture EarthSpec;
     private Texture EarthCloud;
     override protected string VertexShaderName { get; } = "PlanetRenderer.Shaders.PlanetShader.vert";
     override protected string FragmentShaderName { get; } = "PlanetRenderer.Shaders.EarthShader.frag";
     override protected string SurfaceTextureName { get; } = "PlanetRenderer.Textures.EarthDay.jpg";
+    protected override string NormalTextureName { get; } = "PlanetRenderer.Textures.EarthNormal.png";
 
     public EarthRenderer() : base()
     {
-      EarthNormal = Texture.LoadFromResource(
-        "PlanetRenderer.Textures.EarthNormal.png",
-        TextureUnit.Texture1);
-      PlanetShader.SetInt("NormalTexture", 1);
-
       EarthNight = Texture.LoadFromResource(
         "PlanetRenderer.Textures.EarthNight.jpg",
         TextureUnit.Texture2);
@@ -39,7 +33,6 @@ namespace PlanetRenderer
     {
       base.UseTextures();
       EarthNight.Use();
-      EarthNormal.Use();
       EarthSpec.Use();
       EarthCloud.Use();
     }
