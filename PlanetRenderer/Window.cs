@@ -25,7 +25,7 @@ namespace PlanetRenderer
       GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
       Camera = new Camera(Vector3.UnitZ * 20.0f, Size.X / (float)Size.Y);
-      Renderer = new RockPlanetRenderer();
+      Renderer = new RingPlanetRenderer();
 
     }
 
