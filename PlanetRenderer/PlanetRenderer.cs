@@ -6,12 +6,13 @@ namespace PlanetRenderer
   internal class PlanetRenderer
   {
     private const float TwoPi = 2f * (float)Math.PI;
-    protected Shader PlanetShader;
     private readonly float[] Vertices;
     private int VertexBufferObject;
     private int VertexArrayObject;
     private Texture Surface;
     private float RotationAngle = 0;
+
+    protected Shader PlanetShader;
     protected virtual string VertexShaderName { get; } = "PlanetRenderer.Shaders.PlanetShader.vert";
     protected virtual string FragmentShaderName { get; } = "PlanetRenderer.Shaders.FlatPlanetShader.frag";
     protected virtual string SurfaceTextureName { get; } = "PlanetRenderer.Textures.MarsSurface.png";
@@ -39,8 +40,9 @@ namespace PlanetRenderer
         3 * sizeof(float),
         0);
       GL.EnableVertexAttribArray(0);
-      Surface = Texture.LoadFromResource(SurfaceTextureName);
-      Surface.Use(TextureUnit.Texture0);
+      Surface = Texture.LoadFromResource(
+        SurfaceTextureName,
+        TextureUnit.Texture0);
       PlanetShader.SetInt("SurfaceTexture", 0);
     }
 
@@ -88,7 +90,7 @@ namespace PlanetRenderer
 
     protected virtual void UseTextures()
     {
-      Surface.Use(TextureUnit.Texture0);
+      Surface.Use();
     }
   }
 }

@@ -9,14 +9,15 @@ namespace PlanetRenderer
   public class Texture
   {
     public readonly int Handle;
+    private TextureUnit TextureUnit;
 
-    public static Texture LoadFromResource(string path)
+    public static Texture LoadFromResource(string path, TextureUnit textureUnit)
     {
       // Generate handle
       int handle = GL.GenTexture();
 
       // Bind the handle
-      GL.ActiveTexture(TextureUnit.Texture0);
+      GL.ActiveTexture(textureUnit);
       GL.BindTexture(TextureTarget.Texture2D, handle);
 
       // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
@@ -67,21 +68,22 @@ namespace PlanetRenderer
       // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
       GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-      return new Texture(handle);
+      return new Texture(handle, textureUnit);
     }
 
-    public Texture(int glHandle)
+    public Texture(int glHandle, TextureUnit textureUnit)
     {
       Handle = glHandle;
+      TextureUnit= textureUnit;
     }
 
     // Activate texture
     // Multiple textures can be bound, if your shader needs more than just one.
     // If you want to do that, use GL.ActiveTexture to set which slot GL.BindTexture binds to.
     // The OpenGL standard requires that there be at least 16, but there can be more depending on your graphics card.
-    public void Use(TextureUnit unit)
+    public void Use()
     {
-      GL.ActiveTexture(unit);
+      GL.ActiveTexture(TextureUnit);
       GL.BindTexture(TextureTarget.Texture2D, Handle);
     }
   }
