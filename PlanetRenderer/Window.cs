@@ -10,7 +10,7 @@ namespace PlanetRenderer
   {
     private Camera Camera;
     private bool Button1Pressed;
-    private Renderer Renderer;
+    private PlanetRenderer Renderer;
     private bool pause = false;
 
     internal Window(
@@ -25,7 +25,7 @@ namespace PlanetRenderer
       GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
       Camera = new Camera(Vector3.UnitZ * 20.0f, Size.X / (float)Size.Y);
-      Renderer = new Renderer();
+      Renderer = new EarthRenderer();
 
     }
 
@@ -35,7 +35,7 @@ namespace PlanetRenderer
       base.OnRenderFrame(e);
       GL.Clear(ClearBufferMask.ColorBufferBit);
 
-      Renderer.RenderFrame(Camera);
+      Renderer.RenderFrame(Camera, new Vector3(1, 0, 0));
 
       SwapBuffers();
     }
@@ -46,8 +46,6 @@ namespace PlanetRenderer
       Renderer.UpdateFrame(pause);
 
     }
-
-
 
     protected override void OnKeyDown(KeyboardKeyEventArgs e)
     {
@@ -74,7 +72,7 @@ namespace PlanetRenderer
       if (Button1Pressed) {
         var sideRotation = Matrix4.CreateFromAxisAngle(Camera.Up, -e.DeltaX * 0.002f);
         var pitchRotation = Matrix4.CreateFromAxisAngle(Vector3.Cross(Camera.Position, Camera.Up), e.DeltaY * 0.002f);
-        var transform = sideRotation * pitchRotation;
+        var transform = pitchRotation * sideRotation;
 
         var newPosition = new Vector4(Camera.Position, 1.0f) * transform;
         var newUp = new Vector4(Camera.Up, 1.0f) * transform;

@@ -1,7 +1,7 @@
 #version 330
 #define PI 3.1415926538
 #define Sqrt2PI 2.506628274631000502415765284811
-#define Sigma 0.01
+#define Sigma 0.005
 #define CloudFactor (1.0 + Sigma)
 
 uniform sampler2D texture0;
@@ -102,7 +102,7 @@ void main()
     //if (sqrt(mag) > 1 - Sigma * 1.1)
     {
       borderSmoth = (1 + cos((sqrt(mag)-1/CloudFactor) * PI / Sigma));
-      outputColor = (cloud * diffuse + (1-cloud.x) * vec4(0.4,0.4,0.9,1) * pow(diffuse, 2)) * borderSmoth ;
+      outputColor = (cloud + (1-cloud) * vec4(0.6,0.7,1,1) ) * borderSmoth * diffuse ;
     }
     //else
       
