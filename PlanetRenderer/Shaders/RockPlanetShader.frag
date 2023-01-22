@@ -52,6 +52,7 @@ void main()
     mat3 TBN = mat3(T, B, normalize(N));
 
     N = rotate(N,vec3(1,0,0), -0.4101524);
+
     float lat = acos(N.y) / PI ;
     float lon = rotation.x + 0.5 * sign(N.z) * acos(-N.x/length(N.xz)) / PI;
 

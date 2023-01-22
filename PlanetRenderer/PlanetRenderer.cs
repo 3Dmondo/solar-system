@@ -64,14 +64,14 @@ namespace PlanetRenderer
       PlanetShader.Use();
       SetShaderUniforms(camera, LightPosition);
       BindVertexArrays();
+      GL.DrawArrays(PrimitiveType.Points, 0, Vertices.Length / 3);
+      GL.Disable(EnableCap.PointSprite);
+      GL.Disable(EnableCap.VertexProgramPointSize);
     }
 
     private void BindVertexArrays()
     {
       GL.BindVertexArray(VertexArrayObject);
-      GL.DrawArrays(PrimitiveType.Points, 0, Vertices.Length / 3);
-      GL.Disable(EnableCap.PointSprite);
-      GL.Disable(EnableCap.VertexProgramPointSize);
     }
 
     protected virtual void SetShaderUniforms(
@@ -83,6 +83,7 @@ namespace PlanetRenderer
         Matrix4.Identity *
         camera.GetViewMatrix() *
         camera.GetProjectionMatrix());
+
       PlanetShader.SetVector3("camera_pos", camera.Position);
       PlanetShader.SetVector3("lightPos", LightPosition);
       PlanetShader.SetVector3("rotation", new Vector3(RotationAngle, 0, 0));

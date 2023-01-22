@@ -3,7 +3,6 @@
 
 uniform sampler2D SurfaceTexture;
 uniform sampler2D RingTexture;
-
 uniform vec3 rotation;
 
 in vec3 lightDir;
@@ -39,21 +38,13 @@ void main()
     float mag = dot(C,C);
     if (mag > 1.0) discard;   // kill pixels outside circle
 
-
     vec3 N = vec3(C, sqrt(1 - mag));
 
-
-    float latR = acos(N.y) / PI ;
-    float lonR = rotation.x + 0.5 * sign(N.z) * acos(-N.x/length(N.xz)) / PI;
-
-
     N = rotate(N,vec3(1,0,0), -0.4101524);
-
 
     float lat = acos(N.y) / PI ;
     float lon = rotation.x + 0.5 * sign(N.z) * acos(-N.x/length(N.xz)) / PI;
 
-    float lightR = 1;
     float lightTheta = acos(lightDir.y);
     float lightPhi = atan(lightDir.z,lightDir.x);
     float lx = tan(lightTheta);
