@@ -15,7 +15,7 @@ namespace PlanetRenderer
     protected Shader PlanetShader;
     protected virtual string VertexShaderName { get; } = "PlanetRenderer.Shaders.ImpostorSphere.vert";
     protected virtual string FragmentShaderName { get; } = "PlanetRenderer.Shaders.ImpostorSphere.frag";
-    protected virtual string SurfaceTextureName { get; } = "PlanetRenderer.Textures.MarsSurface.png";
+    protected virtual string SurfaceTextureName { get; } = "PlanetRenderer.Textures.EarthDay.jpg";
     protected virtual float RotationSpeed { get; } = 1f / 3600f;
 
     public PlanetRenderer2()
@@ -45,10 +45,10 @@ namespace PlanetRenderer
         3 * sizeof(float),
         0);
       GL.EnableVertexAttribArray(0);
-      //Surface = Texture.LoadFromResource(
-      //  SurfaceTextureName,
-      //  TextureUnit.Texture0);
-      //PlanetShader.SetInt("SurfaceTexture", 0);
+      Surface = Texture.LoadFromResource(
+        SurfaceTextureName,
+        TextureUnit.Texture0);
+      PlanetShader.SetInt("SurfaceTexture", 0);
     }
 
     public virtual void UpdateFrame(bool pause)
@@ -83,22 +83,35 @@ namespace PlanetRenderer
       Camera camera,
       Vector3 LightPosition)
     {
-      //PlanetShader.SetMatrix4(
-      //  "view",
-      //  camera.GetViewMatrix());
+      //GL.Enable(EnableCap.DepthTest);
+      //GL.DepthFunc(DepthFunction.Less);
+
+      var planetAxis = new Vector3(1.0f, 0.1f, 0.0f);
+      planetAxis.Normalize();
+      var norm = Vector3.Cross(planetAxis, new Vector3(0, 0, -1));
+      var binorm = Vector3.Cross(norm, planetAxis);
+      var orientation = new Matrix3(planetAxis, norm, binorm);
+
+
+      PlanetShader.SetMatrix3(
+        "orientation",
+        orientation);
+
+      PlanetShader.SetMatrix4(
+        "view",
+        camera.GetViewMatrix());
 
       PlanetShader.SetMatrix4(
         "cameraToClipMatrix",
         camera.GetProjectionMatrix());
 
-      PlanetShader.SetVector3("cameraSpherePos",(new  Vector4(0.0f,0,0,1) * camera.GetViewMatrix()).Xyz);
+      PlanetShader.SetVector3("cameraSpherePos", (new Vector4(0.0f, 0, 0, 1) * camera.GetViewMatrix()).Xyz);
       //PlanetShader.SetVector3("lightPos", LightPosition);
-      //PlanetShader.SetVector3("rotation", new Vector3(RotationAngle, 0, 0));
+      PlanetShader.SetFloat("rotation", RotationAngle);
     }
-
     protected virtual void UseTextures()
     {
-      //Surface.Use();
+      Surface.Use();
     }
   }
 }

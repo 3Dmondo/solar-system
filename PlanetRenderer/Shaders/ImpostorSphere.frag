@@ -1,4 +1,12 @@
 #version 330
+#define PI 3.1415926538
+
+uniform sampler2D SurfaceTexture;
+
+uniform	mat4 cameraToClipMatrix;
+uniform mat4 view;
+uniform mat3 orientation;
+uniform float rotation;
 
 in vec2 mapping;
 
@@ -34,6 +42,13 @@ void main()
 	vec3 cameraNormal;
 	
 	Impostor(cameraPos, cameraNormal);
+
+  cameraNormal = mat3(view) * cameraNormal;
+  cameraNormal = orientation * cameraNormal;
+
+  vec2 uv = vec2(
+    rotation + atan(cameraNormal.z, cameraNormal.x) / (PI * 2.0),
+    acos(-cameraNormal.y) / PI);
 	
-	outputColor = vec4(cameraPos,1); //2.0 gamma correction
+	outputColor = texture(SurfaceTexture, uv); //2.0 gamma correction
 }
