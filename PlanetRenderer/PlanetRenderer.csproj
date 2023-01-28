@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <None Remove="Shaders\FlatPlanetShader.frag" />
+    <None Remove="Shaders\ImpostorSphere.frag" />
+    <None Remove="Shaders\ImpostorSphere.vert" />
     <None Remove="Shaders\PlanetShader.vert" />
     <None Remove="Shaders\RingPlanetShader.frag" />
     <None Remove="Shaders\RockPlanetShader.frag" />

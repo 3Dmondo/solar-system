@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace PlanetRenderer
 {
-  internal class PlanetRenderer2
+  internal class PlanetRenderer
   {
     private const float TwoPi = 2f * (float)Math.PI;
     private readonly float[] Vertices;
@@ -13,20 +13,15 @@ namespace PlanetRenderer
     private float RotationAngle = 0;
 
     protected Shader PlanetShader;
-    protected virtual string VertexShaderName { get; } = "PlanetRenderer.Shaders.ImpostorSphere.vert";
-    protected virtual string FragmentShaderName { get; } = "PlanetRenderer.Shaders.ImpostorSphere.frag";
+    protected virtual string VertexShaderName { get; } = "PlanetRenderer.Shaders.PlanetShader.vert";
+    protected virtual string FragmentShaderName { get; } = "PlanetRenderer.Shaders.FlatPlanetShader.frag";
     protected virtual string SurfaceTextureName { get; } = "PlanetRenderer.Textures.MarsSurface.png";
     protected virtual float RotationSpeed { get; } = 1f / 3600f;
 
-    public PlanetRenderer2()
+    public PlanetRenderer()
     {
       PlanetShader = new Shader(VertexShaderName, FragmentShaderName);
-      Vertices = new float[] {
-        0f, 0f, 0f,
-        0f, 0f, 0f,
-        0f, 0f, 0f,
-        0f, 0f, 0f
-      };
+      Vertices = new float[] { 0f, 0f, 0f };
       VertexBufferObject = GL.GenBuffer();
       GL.BindBuffer(
         BufferTarget.ArrayBuffer,
@@ -45,10 +40,10 @@ namespace PlanetRenderer
         3 * sizeof(float),
         0);
       GL.EnableVertexAttribArray(0);
-      //Surface = Texture.LoadFromResource(
-      //  SurfaceTextureName,
-      //  TextureUnit.Texture0);
-      //PlanetShader.SetInt("SurfaceTexture", 0);
+      Surface = Texture.LoadFromResource(
+        SurfaceTextureName,
+        TextureUnit.Texture0);
+      PlanetShader.SetInt("SurfaceTexture", 0);
     }
 
     public virtual void UpdateFrame(bool pause)
@@ -69,7 +64,7 @@ namespace PlanetRenderer
       PlanetShader.Use();
       SetShaderUniforms(camera, LightPosition);
       BindVertexArrays();
-      GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
+      GL.DrawArrays(PrimitiveType.Points, 0, Vertices.Length / 3);
       GL.Disable(EnableCap.PointSprite);
       GL.Disable(EnableCap.VertexProgramPointSize);
     }
@@ -83,22 +78,20 @@ namespace PlanetRenderer
       Camera camera,
       Vector3 LightPosition)
     {
-      //PlanetShader.SetMatrix4(
-      //  "view",
-      //  camera.GetViewMatrix());
-
       PlanetShader.SetMatrix4(
-        "cameraToClipMatrix",
+        "model_view_projection",
+        Matrix4.Identity *
+        camera.GetViewMatrix() *
         camera.GetProjectionMatrix());
 
-      PlanetShader.SetVector3("cameraSpherePos",(new  Vector4(0.5f,0,0,1) * camera.GetViewMatrix()).Xyz);
-      //PlanetShader.SetVector3("lightPos", LightPosition);
-      //PlanetShader.SetVector3("rotation", new Vector3(RotationAngle, 0, 0));
+      PlanetShader.SetVector3("camera_pos", camera.Position);
+      PlanetShader.SetVector3("lightPos", LightPosition);
+      PlanetShader.SetVector3("rotation", new Vector3(RotationAngle, 0, 0));
     }
 
     protected virtual void UseTextures()
     {
-      //Surface.Use();
+      Surface.Use();
     }
   }
 }

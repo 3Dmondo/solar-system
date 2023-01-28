@@ -10,7 +10,7 @@ namespace PlanetRenderer
   {
     private Camera Camera;
     private bool Button1Pressed;
-    private PlanetRenderer Renderer;
+    private PlanetRenderer2 Renderer;
     private bool pause = false;
 
     internal Window(
@@ -22,10 +22,10 @@ namespace PlanetRenderer
     protected override void OnLoad()
     {
       base.OnLoad();
-      GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+      GL.ClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 
-      Camera = new Camera(Vector3.UnitZ * 20.0f, Size.X / (float)Size.Y);
-      Renderer = new RingPlanetRenderer();
+      Camera = new Camera(-Vector3.UnitZ * 20.0f, Size.X / (float)Size.Y);
+      Renderer = new PlanetRenderer2();
 
     }
 
@@ -34,6 +34,10 @@ namespace PlanetRenderer
     {
       base.OnRenderFrame(e);
       GL.Clear(ClearBufferMask.ColorBufferBit);
+
+      GL.Enable(EnableCap.CullFace);
+      GL.CullFace(CullFaceMode.Back);
+      GL.FrontFace(FrontFaceDirection.Cw);
 
       Renderer.RenderFrame(Camera, new Vector3(1, 0, 0));
 
