@@ -35,5 +35,5 @@ void main()
 	
 	Impostor(cameraPos, cameraNormal);
 	
-	outputColor = vec4(cameraNormal,1); //2.0 gamma correction
+	outputColor = vec4(cameraPos,1); //2.0 gamma correction
 }

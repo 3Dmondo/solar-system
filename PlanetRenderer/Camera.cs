@@ -30,7 +30,7 @@ namespace PlanetRenderer
 
     public Matrix4 GetProjectionMatrix()
     {
-      return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 1f, 1000f);
+      return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 1000f);
     }
 
   }
