@@ -6,6 +6,7 @@ uniform sampler2D SurfaceTexture;
 uniform	mat4 cameraToClipMatrix;
 uniform mat4 view;
 uniform mat3 orientation;
+uniform vec3 lightPos;
 uniform float rotation;
 
 in vec2 mapping;
@@ -46,9 +47,12 @@ void main()
   cameraNormal = mat3(view) * cameraNormal;
   cameraNormal = orientation * cameraNormal;
 
+  vec3 lightDir = normalize(lightPos -  cameraSpherePos );
+  float diffuse = dot(cameraNormal,lightDir);
+
   vec2 uv = vec2(
     rotation + atan(cameraNormal.z, cameraNormal.x) / (PI * 2.0),
     acos(-cameraNormal.y) / PI);
 	
-	outputColor = texture(SurfaceTexture, uv); //2.0 gamma correction
+	outputColor = texture(SurfaceTexture, uv) * diffuse; //2.0 gamma correction
 }
