@@ -105,7 +105,7 @@ namespace PlanetRenderer
         "cameraToClipMatrix",
         camera.GetProjectionMatrix());
 
-      PlanetShader.SetVector3("cameraSpherePos", (new Vector4(0.0f, 0, 0, 1) * camera.GetViewMatrix()).Xyz);
+      PlanetShader.SetVector3("cameraSpherePos", (new Vector4(2.0f, 0, 0, 1) * camera.GetViewMatrix()).Xyz);
       //PlanetShader.SetVector3("lightPos", (new Vector4(LightPosition, 1) * camera.GetViewMatrix()).Xyz);
       PlanetShader.SetVector3("lightPos", LightPosition);
 

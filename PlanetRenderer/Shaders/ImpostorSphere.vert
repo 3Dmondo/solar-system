@@ -7,7 +7,7 @@ out vec2 mapping;
 uniform	mat4 view;
 uniform	mat4 cameraToClipMatrix;
 
-const float sphereRadius = 0.5;
+const float sphereRadius = 1.0;
 uniform vec3 cameraSpherePos;
 
 const float g_boxCorrection = 1.5;

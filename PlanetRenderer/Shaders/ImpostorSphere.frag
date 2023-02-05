@@ -13,7 +13,7 @@ in vec2 mapping;
 
 out vec4 outputColor;
 
-const float sphereRadius = 0.5;
+const float sphereRadius = 1.0;
 uniform vec3 cameraSpherePos;
 
 void Impostor(out vec3 cameraPos, out vec3 cameraNormal)
@@ -48,7 +48,7 @@ void main()
   cameraNormal = orientation * cameraNormal;
 
   vec3 lightDir = normalize(lightPos -  cameraSpherePos );
-  float diffuse = dot(cameraNormal,lightDir);
+  float diffuse = max(0.2,dot(cameraNormal,lightDir));
 
   vec2 uv = vec2(
     rotation + atan(cameraNormal.z, cameraNormal.x) / (PI * 2.0),

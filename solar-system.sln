@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanetRenderer", "PlanetRenderer\PlanetRenderer.csproj", "{8BC117DF-AF84-462F-B53A-40236F952314}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpemeridesReader", "EpemeridesReader\EpemeridesReader.csproj", "{70CB698A-1C9E-45CC-9B02-99463EF2CD0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpemeridesReader.Tests", "EpemeridesReader.Tests\EpemeridesReader.Tests.csproj", "{83DD49A8-8E12-4357-AC68-32AC4FA7A32E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{8BC117DF-AF84-462F-B53A-40236F952314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BC117DF-AF84-462F-B53A-40236F952314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC117DF-AF84-462F-B53A-40236F952314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70CB698A-1C9E-45CC-9B02-99463EF2CD0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70CB698A-1C9E-45CC-9B02-99463EF2CD0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70CB698A-1C9E-45CC-9B02-99463EF2CD0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70CB698A-1C9E-45CC-9B02-99463EF2CD0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83DD49A8-8E12-4357-AC68-32AC4FA7A32E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83DD49A8-8E12-4357-AC68-32AC4FA7A32E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83DD49A8-8E12-4357-AC68-32AC4FA7A32E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83DD49A8-8E12-4357-AC68-32AC4FA7A32E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
