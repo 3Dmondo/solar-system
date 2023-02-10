@@ -18,7 +18,7 @@ namespace EpemeridesReader
       result.Constants = constantKeys.
         Zip(constantValues).
         ToDictionary(kv => kv.First, kv => kv.Second);
-      result.SeriesDescriptions = GetGroup1050(streamReader).ToArray();
+      result.SeriesDescriptions = GetGroup1050(streamReader, result.NCoeff).ToArray();
       return result;
     }
 
@@ -80,7 +80,7 @@ namespace EpemeridesReader
       return result;
     }
 
-    private static IEnumerable<SeriesDescription> GetGroup1050(StreamReader streamReader)
+    private static IEnumerable<SeriesDescription> GetGroup1050(StreamReader streamReader, int NCoeff)
     {
       AdvanceToGroup(streamReader, "1050");
 
@@ -99,12 +99,21 @@ namespace EpemeridesReader
         SplitInternal().
         Select(int.Parse);
 
+      var Length = startOffset.
+        Zip(startOffset.Skip(1).Concat(new[] { NCoeff + 1 })).
+        Select(x => x.Second - x.First);
+
       return startOffset.
         Zip(numberOfCoefficients, numberOfIntervals).
+        Zip(Length).
         Select(x => new SeriesDescription {
-          StartOffset = x.First,
-          NumberOfCoefficients = x.Second,
-          NumberOfIntervals = x.Third
+          StartOffset = x.First.First,
+          NumberOfCoefficients = x.First.Second,
+          NumberOfIntervals = x.First.Third,
+          Length = x.Second,
+          NumberOfProperties = x.First.Second > 0 && x.First.Third > 0 ? 
+            x.Second / x.First.Second / x.First.Third : 
+            0
         });
     }
   }

@@ -2,7 +2,7 @@ namespace EpemeridesReader
 {
   public class Ephemerides
   {
-    public List<ChebCoefficientsBlock> ChebCoefficientsBlocks { get; set; } = 
-      new List<ChebCoefficientsBlock>();
+    public List<Block> Blocks { get; set; } = 
+      new List<Block>();
   }
 }

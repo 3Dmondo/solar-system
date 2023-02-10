@@ -8,16 +8,18 @@ namespace EpemeridesReader
         ephemerides = new Ephemerides();
       var streamReader = new StreamReader(stream);
       while (!streamReader.EndOfStream) {
-        ephemerides.ChebCoefficientsBlocks.Add(ReadBlock(header, streamReader));
+        ephemerides.Blocks.Add(ReadBlock(header, streamReader));
       }
       return ephemerides;
     }
 
-    private static ChebCoefficientsBlock ReadBlock(Header header, StreamReader streamReader)
+    private static Block ReadBlock(Header header, StreamReader streamReader)
     {
-      var block = new ChebCoefficientsBlock();
-      block.ChebCoefficientSeries =
-        new ChebCoefficientsSeries[header.SeriesDescriptions.Length];
+      var block = new Block();
+
+      block.Series =
+        new Series[header.SeriesDescriptions.Length];
+
       var blockHeader = streamReader.
         ReadNonEmptyLine().
         SplitInternal().
@@ -27,40 +29,81 @@ namespace EpemeridesReader
 
       var values = streamReader.ReadDoubles(count).ToArray();
       var valuesSpan = new Span<double>(values);
-      var currentIndex = 2;
+
       for (var currentSeries = 0;
         currentSeries < header.SeriesDescriptions.Length;
         currentSeries++) {
+
         var seriesDescription = header.SeriesDescriptions[currentSeries];
-        var currentSeriesLength =
-          (currentSeries < header.SeriesDescriptions.Length - 1 ?
-          header.SeriesDescriptions[currentSeries + 1].StartOffset :
-          count) - seriesDescription.StartOffset;
-        var chebCoefficientIntervals = new ChebCoefficientsInterval[seriesDescription.NumberOfIntervals];
-        var numberOfProperties =
-          seriesDescription.NumberOfCoefficients > 0 && 
-          seriesDescription.NumberOfIntervals > 0 ?
-            currentSeriesLength /
-            seriesDescription.NumberOfCoefficients /
-            seriesDescription.NumberOfIntervals:
-            0;
-        for (var interval = 0; interval < seriesDescription.NumberOfIntervals; interval++) {
-          var chebCoefficientInterval = new ChebCoefficientsInterval();
-          chebCoefficientInterval.ChebCoefficients = new ChebCoefficients[numberOfProperties];
-          for (var property = 0; property < numberOfProperties; property++) {
-            var chebCoefficients = new ChebCoefficients {
-              Coefficients = valuesSpan.Slice(currentIndex, seriesDescription.NumberOfCoefficients).ToArray()
-            };
-            chebCoefficientInterval.ChebCoefficients[property] = chebCoefficients;
-            currentIndex += seriesDescription.NumberOfCoefficients;
-          }
-          chebCoefficientIntervals[interval] = chebCoefficientInterval;
-        }
-        block.ChebCoefficientSeries[currentSeries] = new ChebCoefficientsSeries {
-          ChebCoefficientIntervals = chebCoefficientIntervals
+
+        var intervals = ReadIntervals(
+          valuesSpan,
+          header.DaysPerBlock,
+          seriesDescription.StartOffset - 1,
+          seriesDescription.NumberOfIntervals,
+          seriesDescription.NumberOfProperties,
+          seriesDescription.NumberOfCoefficients);
+
+        block.Series[currentSeries] = new Series {
+          Intervals = intervals
         };
       }
       return block;
     }
+
+    private static Interval[] ReadIntervals(
+      Span<double> valuesSpan,
+      double daysPerBlock,
+      int startOffset,
+      int numberOfIntervals,
+      int numberOfProperties,
+      int numberOfCoefficients)
+    {
+
+      var length = numberOfCoefficients * numberOfProperties;
+      var chebCoefficientIntervals = new Interval[numberOfIntervals];
+
+      for (var interval = 0; interval < numberOfIntervals; interval++)
+        chebCoefficientIntervals[interval] = 
+          ReadInterval(
+            valuesSpan.Slice(
+              startOffset + interval * length, 
+              length),
+            daysPerBlock / numberOfIntervals,
+            numberOfProperties,
+            numberOfCoefficients);
+
+      return chebCoefficientIntervals;
+    }
+
+    private static Interval ReadInterval(
+      Span<double> valuesSpan,
+      double daysPerInterval,
+      int numberOfProperties,
+      int numberOfCoefficients)
+    {
+      var interval = new Interval {
+        Properties = new Property[numberOfProperties]
+      };
+
+      for (var property = 0; property < numberOfProperties; property++)
+        interval.Properties[property] =
+          ReadProperty(
+            valuesSpan.Slice(
+              property * numberOfCoefficients, 
+              numberOfCoefficients),
+              daysPerInterval);
+
+      return interval;
+    }
+
+    private static Property ReadProperty(
+      Span<double> valuesSpan,
+      double daysPerInterval) => 
+      new Property {
+        TimeSpan = daysPerInterval,
+        Coefficients = valuesSpan.ToArray()
+      };
   }
+
 }
